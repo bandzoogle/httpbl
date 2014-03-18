@@ -1,8 +1,8 @@
 # The Httpbl middleware 
+require 'timeout'
 
 class HttpBL
   autoload :Resolv, 'resolv'
-  encourage_safe_timeouts
 
   def initialize(app, options = {})
     @app = app
@@ -48,7 +48,7 @@ class HttpBL
   
   def resolve(ip)
     query = @options[:api_key] + '.' + ip.split('.').reverse.join('.') + '.dnsbl.httpbl.org'
-    DnsTimeout::timeout(@options[:dns_timeout]) do
+    Timeout::timeout(@options[:dns_timeout]) do
        Resolv::DNS.new.getaddress(query).to_s rescue false
     end
     rescue Timeout::Error, Errno::ECONNREFUSED
@@ -65,22 +65,4 @@ class HttpBL
     end
     return blocked
   end
-
-private
-
-  def encourage_safe_timeouts
-    if /^1\.8/ =~ RUBY_VERSION 
-      begin
-        require 'system_timer'
-        DnsTimeout = SystemTimer
-      rescue LoadError
-        require 'timeout'
-        DnsTimeout = Timeout
-      end
-    else
-      require 'timeout'
-      DnsTimeout = Timeout
-    end
-  end
-
 end
