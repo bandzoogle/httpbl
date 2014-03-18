@@ -39,9 +39,9 @@ class HttpBL
   
   def cache_check(ip)
     cache = @cache.clone if @cache
-    unless response = cache.get("httpbl_#{ip}")
+    unless response = cache.read("httpbl:#{ip}")
       response = resolve(ip)
-      cache.set("httpbl_#{ip}", (response || "0.0.0.0"), 1.hour)
+      cache.write("httpbl_#{ip}", (response || "0.0.0.0"), expires_in:1.hour)
     end
     return response
   end
