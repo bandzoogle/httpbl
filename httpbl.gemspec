@@ -8,7 +8,8 @@ Gem::Specification.new do |s|
   s.rubyforge_project = 'httpbl'   
   s.summary = "HttpBL is a Rack middleware filter that blocks requests from suspicious IP addresses."
   s.description = "HttpBL is a Rack middleware filter that blocks requests from suspicious IP addresses."
-   
+  s.test_files = Dir.glob("spec/**/*")
+  
   s.files = %w[ 
     README
     CHANGELOG
@@ -16,11 +17,10 @@ Gem::Specification.new do |s|
     lib/httpbl.rb
     ]
   
-  #s.add_dependency 'rack', '>= 0.9.0'
   s.extra_rdoc_files = %w[README]
   s.require_paths = %w[lib]
 
-  s.required_ruby_version = '>= 1.9.3' # Maybe less?
+  s.required_ruby_version = '>= 1.9.3'
 
   s.add_dependency 'rack'
   s.add_development_dependency 'minitest'
