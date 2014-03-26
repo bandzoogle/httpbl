@@ -9,7 +9,6 @@ module HttpBL
     end
 
     def blocked?(ip_address)
-      ip_address = "8.35.201.54"
       bl_status = check(ip_address)
       return false if !bl_status
       response = bl_status.split('.').collect!(&:to_i)
