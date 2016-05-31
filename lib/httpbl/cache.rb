@@ -27,11 +27,9 @@ module HttpBL
     end
     
     def cache_check(ip)
-      #cache = @cache.clone if @cache
       key = "#{@prefix}:::#{ip}"
       unless response = @cache.read(key)
         response = resolve(ip)
-        puts "**** #{ip} #{response}"
         @cache.write(key, (response || "0.0.0.0"), expires_in:1.hour)
       end
       return response
@@ -39,7 +37,6 @@ module HttpBL
     
     def resolve(ip)
       query = @options[:api_key] + '.' + ip.split('.').reverse.join('.') + '.dnsbl.httpbl.org'
-      puts "!!!!!! #{query}"
       Timeout::timeout(@options[:dns_timeout]) do
         Resolv::DNS.new.getaddress(query).to_s rescue false
       end
